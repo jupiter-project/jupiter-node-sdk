@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.5.0] - 2020-09-02
+### Changed
+- Update transaction base fee
+
 ## [0.4.1] - 2020-08-09
 ### Changed
 - Changed getBalance response returning confirmed and unconfirmed balance
