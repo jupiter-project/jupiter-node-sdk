@@ -14,6 +14,7 @@ export default function JupiterClient(opts: IJupiterClientOpts) {
     deadline: opts.deadline || 60,
     minimumFndrAccountBalance: opts.minimumFndrAccountBalance || 300000000,
     minimumUserAccountBalance: opts.minimumUserAccountBalance || 500000000,
+    fundingAmount: opts.fundingAmount || 650000000,
     jupNqtDecimals: opts.jupNqtDecimals || 8,
   }
 
@@ -190,16 +191,27 @@ export default function JupiterClient(opts: IJupiterClientOpts) {
       return { address, publicKey, requestProcessingTime, account }
     },
 
+    /**
+     *
+     * @param recipientAddr
+     * @param amountJup
+     */
     async sendMoney(recipientAddr: string, amountJup?: string) {
+      console.log('########################################')
+      console.log(`## sendMoney(recipientAddr=${recipientAddr}, amountJup=${amountJup})`)
+
+      const amount = amountJup ? amountJup : CONF.minimumFndrAccountBalance
+      const fee = CONF.feeNQT
+      console.log(`  amount=${amount}`);
+      console.log(`  fee=${fee}`);
+
       const { data } = await this.request('post', '/nxt', {
         params: {
           requestType: 'sendMoney',
           secretPhrase: opts.passphrase,
           recipient: recipientAddr,
-          amountNQT: amountJup
-            ? amountJup
-            : CONF.minimumFndrAccountBalance,
-          feeNQT: CONF.feeNQT,
+          amountNQT: amount,
+          feeNQT: fee,
           deadline: CONF.deadline,
         },
       })
@@ -274,7 +286,7 @@ export default function JupiterClient(opts: IJupiterClientOpts) {
 
     async getAllTransactions(
       withMessage: boolean = true,
-      type: number = 1, 
+      type: number = 1,
       subtype?: number
     ): Promise<ITransaction[]> {
       const [confirmed, unconfirmed] = await Promise.all([
@@ -398,6 +410,7 @@ interface IJupiterClientOpts {
   deadline?: number
   minimumFndrAccountBalance?: number
   minimumUserAccountBalance?: number
+  fundingAmount?: number
   jupNqtDecimals?: number
 }
 
