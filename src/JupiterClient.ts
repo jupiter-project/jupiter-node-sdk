@@ -218,7 +218,7 @@ export default function JupiterClient(opts: IJupiterClientOpts) {
     },
 
     // async storeRecord(record: IStringMap) {
-    async storeRecord(record: any, subtype: string) {
+    async storeRecord(record: any, subtype: string, fee?:number) {
       const finalRecordToStore = this.recordKey
         ? {
             ...record,
@@ -231,6 +231,7 @@ export default function JupiterClient(opts: IJupiterClientOpts) {
       )
 
       const requestType = subtype ? 'sendMetisMessage' : 'sendMessage'
+      const txFee = (fee !== undefined) ? fee : this.calculateMessageFee(encryptedMessage.length)
 
       const { data } = await this.request('post', '/nxt', {
         params: {
@@ -240,7 +241,7 @@ export default function JupiterClient(opts: IJupiterClientOpts) {
           recipient: opts.address,
           recipientPublicKey: opts.publicKey,
           messageToEncrypt: encryptedMessage,
-          feeNQT: this.calculateMessageFee(encryptedMessage.length),
+          feeNQT: txFee,
           deadline: CONF.deadline,
           compressMessageToEncrypt: true,
         },
