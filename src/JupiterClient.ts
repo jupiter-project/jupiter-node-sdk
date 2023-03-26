@@ -10,7 +10,7 @@ export default function JupiterClient(opts: IJupiterClientOpts) {
     secret: opts.encryptSecret || opts.passphrase,
   })
   const CONF = {
-    feeNQT: opts.feeNQT || 5000,
+    feeNQT: opts.feeNQT || 50000,
     deadline: opts.deadline || 60,
     minimumFndrAccountBalance: opts.minimumFndrAccountBalance || 300000000,
     minimumUserAccountBalance: opts.minimumUserAccountBalance || 500000000,
